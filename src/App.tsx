@@ -4,14 +4,13 @@ import api from './components/api'
 
 function App() {
   const [data, setData] = useState([])
-  const [table, setTable] = useState("")
   const [username, setUserName] = useState("")
   const [password, setPassword] = useState("")
   const [host, setHost] = useState("")
   const [database, setDatabase] = useState("")
 
   async function Connect(){
-    if (username && password && host && database){
+    if (username && host && database){
       localStorage.setItem("username_db", username)
       localStorage.setItem("password", password)
       localStorage.setItem("host", host)
@@ -19,11 +18,12 @@ function App() {
       const response = await api.post("/database", {
         username, password, host, database
       })
-      list_columns = []
-      list_rows = []
-      setData([])
-      setData(response.data.db[table || 0].data)
+      setData(response.data.db)
     }
+  }
+
+  function showTable(index: number){
+    document.getElementById("tables")!.style.transform = `translatex(${index * -100}%)`
   }
 
   useEffect(() => {
@@ -31,34 +31,15 @@ function App() {
     const host = localStorage.getItem("host")
     const password = localStorage.getItem("password")
     const database = localStorage.getItem("database")
-    if (username && host && password && database){
+    if (username && host && database){
       api.post("/database", {
         username, password, host, database
       })
       .then((response) => {
-        list_columns = []
-        list_rows = []
-        setData([])
-        setData(response.data.db[table || 0].data)
+        setData(response.data.db)
       })
     }
-  }, [table])
-
-  var list_columns = []
-  var list_rows = []
-
-  for (const column in data[0]){
-    list_columns.push(<th>{column}</th>)
-  }
-
-  for (const rows of data){
-    const list_columns_rows = []
-    for (const valor in rows){
-      list_columns_rows.push(<td key={rows[valor]}>{rows[valor]}</td>)
-    }
-    list_rows.push(<tr key={rows}>{list_columns_rows}</tr>)
-  }
-
+  }, [])
   return (
     <>
       <header>
@@ -91,23 +72,22 @@ function App() {
         </div>
       </header>
       <main>
-        <div id="table">
-          <ul id="tables">
-            <li onClick={() => setTable("0")}>1</li>
-            <li onClick={() => setTable("1")}>2</li>
-            <li onClick={() => setTable("2")}>3</li>
-            <li onClick={() => setTable("3")}>4</li>
-          </ul>
-          <table>
-            <thead>
-              <tr>
-                {list_columns}
-              </tr>
-            </thead>
-            <tbody>
-              {list_rows}
-            </tbody>
-          </table>
+        <ul id="change_table">
+          {data.map((table, index) => <li onClick={() => showTable(index)}>{table["table"]}</li>)}
+        </ul>
+        <div id="tables">
+          {data.map((table) => (
+            <table key={table["table"]}>
+              <thead>
+                <tr>
+                  {Object.keys(table["data"][0]).map((column) => <th>{column}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {(table["data"] as never[]).map((row) => <tr>{Object.entries<string>(row).map((valor) => <td>{valor[1]}</td>)}</tr>)}
+              </tbody>
+            </table>
+          ))}
         </div>
       </main>
     </>

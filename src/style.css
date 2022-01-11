@@ -19,7 +19,7 @@ header{
     justify-content: space-between;
 }
 #inputs{
-    width: 80%;
+    width: 68%;
     display: flex;
     justify-content: space-between;
 }
@@ -46,48 +46,49 @@ header{
 main{
     width: 100%;
     height: calc(100vh - 61px);
+}
+#root{
     background-color: rgb(36, 36, 36);
+    overflow-x: hidden;
 }
-#table{
-    padding: 20px 20px 0px 20px;
-    width: calc(100% - 40px);
-    height: calc(100vh - 81px);
+#tables{
+    width: 100%;
+    display: flex;
+    transition: .5s;
 }
-#table thead{
+#tables thead{
     border-bottom: 1px solid rgb(173, 173, 173);
 }
-#table table{
+#tables table{
     border-collapse: collapse;
 }
-#table th{
+#tables th{
     width: 200px;
     color: white;
     font-size: 16px;
     padding: 5px;
 }
-#table td{
+#tables td{
     width: 200px;
     color: rgba(255, 255, 255, 0.78);
     font-size: 15px;
     padding: 8px;
     text-align: center;
 }
-#tables{
-    display: flex;
-    margin-bottom: 20px;
-    border-bottom: 2px solid rgb(24, 24, 24);
+#tables table{
+    min-width: calc(100% - 40px);
+    margin: 20px 20px 0px 20px;
 }
-#tables li{
-    width: 80px;
-    height: 30px;
-    background-color: rgb(24, 24, 24);
+#change_table{
     display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 2px 2px 0px 0px;
-    color: rgb(207, 207, 207);
+    padding: 20px;
+}
+#change_table li {
+    background-color: #333333;
+    padding: 8px;
+    color: #c1c1c1;
+    border-radius: 3px 3px 0px 0px;
+    margin-right: 10px;
     cursor: pointer;
 }
-#tables li:not(:first-child){
-    margin-left: 5px;
-}
+
