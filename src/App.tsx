@@ -1,45 +1,34 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import "./style.css"
-import api from './components/api'
+import { useDispatch, useSelector } from 'react-redux'
+import { DataDBTypes } from './store/ducks/dataDB/types'
+import { DataDBState } from "./store/ducks/dataDB/types"
+import { AiOutlineMenu } from "react-icons/ai"
+
+type StateProps = {
+  DB: DataDBState
+}
 
 function App() {
-  const [data, setData] = useState([])
+  const dispatch = useDispatch()
+  const state = useSelector(state => state) as StateProps
   const [username, setUserName] = useState("")
   const [password, setPassword] = useState("")
   const [host, setHost] = useState("")
   const [database, setDatabase] = useState("")
+  const [table, setTable] = useState(0)
 
   async function Connect(){
+    ShowConnectionMenu()
     if (username && host && database){
-      localStorage.setItem("username_db", username)
-      localStorage.setItem("password", password)
-      localStorage.setItem("host", host)
-      localStorage.setItem("database", database)
-      const response = await api.post("/database", {
-        username, password, host, database
-      })
-      setData(response.data.db)
+      dispatch({ type: DataDBTypes.LOAD_REQUEST, payload: { username, host, password, database }})
     }
   }
 
-  function showTable(index: number){
-    document.getElementById("tables")!.style.transform = `translatex(${index * -100}%)`
+  function ShowConnectionMenu(){
+    document.getElementById("connectionMenu")?.classList.toggle("active")
   }
-
-  useEffect(() => {
-    const username = localStorage.getItem("username_db")
-    const host = localStorage.getItem("host")
-    const password = localStorage.getItem("password")
-    const database = localStorage.getItem("database")
-    if (username && host && database){
-      api.post("/database", {
-        username, password, host, database
-      })
-      .then((response) => {
-        setData(response.data.db)
-      })
-    }
-  }, [])
+  
   return (
     <>
       <header>
@@ -69,25 +58,49 @@ function App() {
           <div id="connection">
             <button onClick={Connect}>Connect</button>
           </div>
+          <div id="connectionMenuButton" onClick={ShowConnectionMenu}>
+              <AiOutlineMenu/>
+          </div>
         </div>
       </header>
+      <div id="connectionMenu">
+          <input type="text" placeholder="username" onChange={
+            (e) => {
+                setUserName(e.target.value)
+              }
+            }/>
+          <input type="text" placeholder="password" onChange={
+            (e) => {
+                setPassword(e.target.value)
+              }
+            }/>
+          <input type="text" placeholder="host" onChange={
+            (e) => {
+                setHost(e.target.value)
+              }
+            }/>
+          <input type="text" placeholder="database" onChange={
+            (e) => {
+                setDatabase(e.target.value)
+              }
+            }/>
+          <button onClick={Connect}>Connect</button>
+        </div>
       <main>
         <ul id="change_table">
-          {data.map((table, index) => <li onClick={() => showTable(index)}>{table["table"]}</li>)}
+          {state.DB.data.map((table, index) => <li key={table["table"]} onClick={() => setTable(index)}>{table["table"]}</li>)}
         </ul>
-        <div id="tables">
-          {data.map((table) => (
-            <table key={table["table"]}>
-              <thead>
-                <tr>
-                  {Object.keys(table["data"][0]).map((column) => <th>{column}</th>)}
-                </tr>
-              </thead>
-              <tbody>
-                {(table["data"] as never[]).map((row) => <tr>{Object.entries<string>(row).map((valor) => <td>{valor[1]}</td>)}</tr>)}
-              </tbody>
-            </table>
-          ))}
+        <div id="table">
+          <table>
+            <thead>
+              <tr>
+                {state.DB.data.length > 0 ? Object.keys(state.DB.data[table]["data"][0]).map((column) => <th key={column}>{column}</th>) : null}
+              </tr>
+            </thead>
+            <tbody>
+              {state.DB.data.length > 0 ? (state.DB.data[table]["data"] as never[]).map((row) => <tr key={row}>{Object.entries<string>(row).map((valor) => <td>{valor[1]}</td>)}</tr>) : null}
+            </tbody>
+          </table>
         </div>
       </main>
     </>

@@ -1,8 +1,29 @@
+@media screen and (min-width: 1040px) {
+    body #connectionMenu{
+        display: none;
+    }
+}
+
+@media screen and (max-width: 1040px) {
+    header #cabecalho{
+        justify-content: flex-end;
+    }
+    header #cabecalho #inputs, #connection{
+        display: none;
+    }
+    header #connectionMenuButton{
+        display: flex;
+    }
+}
+
 *{
     margin: 0px;
     padding: 0px;
     list-style: none;
     text-decoration: none;
+}
+body, html{
+    overflow-x: hidden;
 }
 header{
     width: 100%;
@@ -17,6 +38,7 @@ header{
     width: 90%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 }
 #inputs{
     width: 68%;
@@ -24,7 +46,7 @@ header{
     justify-content: space-between;
 }
 #inputs input{
-    padding: 4px;
+    padding: 7px;
     background-color: rgb(46, 46, 46);
     border: 1px solid rgb(0, 0, 0);
     color: white;
@@ -43,6 +65,48 @@ header{
     color: white;
     cursor: pointer;
 }
+#connectionMenuButton{
+    display: none;
+}
+#connectionMenuButton svg{
+    transform: scale(1.5);
+    cursor: pointer;
+}
+
+#connectionMenu{
+    width: 200px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #333;
+    left: 100%;
+    transition: 1s;
+}
+#connectionMenu input{
+    padding: 7px;
+    background-color: rgb(46, 46, 46);
+    border: 1px solid rgb(0, 0, 0);
+    color: white;
+    margin: 10px 15px;
+}
+#connectionMenu input:focus{
+    outline: none;
+}
+#connectionMenu button{
+    width: 150px;
+    height: 30px;
+    border: none;
+    background-color: rgb(36, 36, 36);
+    color: white;
+    cursor: pointer;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+#connectionMenu.active{
+    left: calc(100% - 200px);
+}
+
 main{
     width: 100%;
     height: calc(100vh - 61px);
@@ -51,33 +115,33 @@ main{
     background-color: rgb(36, 36, 36);
     overflow-x: hidden;
 }
-#tables{
+#table{
     width: 100%;
     display: flex;
-    transition: .5s;
+    overflow: auto;
 }
-#tables thead{
+
+#table thead{
     border-bottom: 1px solid rgb(173, 173, 173);
 }
-#tables table{
-    border-collapse: collapse;
-}
-#tables th{
+#table th{
     width: 200px;
     color: white;
     font-size: 16px;
     padding: 5px;
 }
-#tables td{
-    width: 200px;
+#table td{
+    width: 150px;
     color: rgba(255, 255, 255, 0.78);
     font-size: 15px;
     padding: 8px;
     text-align: center;
 }
-#tables table{
-    min-width: calc(100% - 40px);
+#table table{
+    width: calc(100% - 40px);
     margin: 20px 20px 0px 20px;
+    border-collapse: collapse;
+    overflow: auto;
 }
 #change_table{
     display: flex;
