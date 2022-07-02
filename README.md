@@ -1,5 +1,3 @@
-# database-frontend
+Visualizador de banco de dados Postgres.
 
-It shows prostgresql databases
-
-site url: https://festive-hamilton-724970.netlify.app
+Link: https://festive-hamilton-724970.netlify.app
