@@ -1,17 +1,22 @@
-import { createStore, Store, applyMiddleware } from "redux";
-import { DataDBState } from "./ducks/dataDB/types";
-import createSagaMiddleware from "@redux-saga/core";
+import { configureStore, Store } from "@reduxjs/toolkit"
+import createMiddleware from "redux-saga"
+import { DatabaseState } from "./ducks/database/types"
 
-import rootReducer from "./ducks/rootReducer";
-import rootSaga from "./ducks/rootSaga";
+import rootReducer from "./ducks/rootReducer"
+import rootSaga from "./ducks/rootSaga"
 
-export interface ApplicationState{
-    DB: DataDBState
+const sagaMiddleware = createMiddleware()
+
+export type ApplicationState = {
+    database: DatabaseState
 }
 
-const sagaMiddleware = createSagaMiddleware()
-
-const store: Store<ApplicationState> = createStore(rootReducer, applyMiddleware(sagaMiddleware))
+const store: Store = configureStore({
+    reducer: rootReducer,
+    middleware: (getDefaultMiddleware) => {
+        return getDefaultMiddleware({ thunk: false }).prepend(sagaMiddleware);
+    }
+})
 
 sagaMiddleware.run(rootSaga)
 

@@ -1,7 +1,7 @@
 import { combineReducers } from "redux"
 
-import DB from "../ducks/dataDB"
+import database from "./database/index"
 
 export default combineReducers({
-    DB
+    database
 })

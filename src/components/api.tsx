@@ -1,8 +1,9 @@
 import axios from "axios"
-// baseURL: "http://localhost:3300/"
-// baseURL: "https://show-database-back.herokuapp.com/"
+
+//"http://localhost:4000/"
+
 const api = axios.create({
-   baseURL: "http://localhost:3300/"
+   baseURL: "http://localhost:4000/"
 })
 
 export default api

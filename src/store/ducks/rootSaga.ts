@@ -1,9 +1,9 @@
 import { all, takeLatest } from "redux-saga/effects"
-import { load, WatchLoad } from "./dataDB/saga"
-import { DataDBTypes } from "./dataDB/types"
+import { GetDatabase } from "./database/saga"
+import { DatabaseTypes } from "./database/types"
 
 export default function* rootSaga(){
     yield all([
-        takeLatest(DataDBTypes.LOAD_REQUEST, load)
+        takeLatest(DatabaseTypes.LOAD_REQUEST, GetDatabase)
     ])
 }

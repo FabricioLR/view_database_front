@@ -1,0 +1,25 @@
+#main{
+    background-color: rgb(48, 48, 48);
+    width: 100%;
+    min-height: calc(100vh - 75px);
+    display: flex;
+    justify-content: center;
+}
+
+#table{
+    width: 95%;
+    margin-top: 20px;
+}
+#select{
+    margin-bottom: 40px;
+}
+#select select{
+    width: 100px;
+    height: 30px;
+}
+#select select:focus{
+    outline: none;
+}
+#select select:hover{
+    cursor: pointer;
+}
