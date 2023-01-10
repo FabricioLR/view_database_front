@@ -4,4 +4,3 @@ dist-ssr
 *.local
 yarn-error.log
 dist
-dist
