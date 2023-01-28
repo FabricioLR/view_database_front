@@ -1,4 +1,4 @@
-import { call, put, takeEvery } from "@redux-saga/core/effects";
+import { call, put } from "@redux-saga/core/effects";
 import api from "../../../components/api";
 import { loadFailure, loadSuccess, loadRequest} from "./actions";
 import { Database } from "./types"
@@ -22,9 +22,9 @@ export function* GetDatabase({ payload }: ReturnType<typeof loadRequest>){
         setLoad("Connect")
 
         yield put(loadSuccess(response.data.result.database))
-    } catch (error) {
+    } catch (error: any) {
         setLoad("Connect")
-        alert(error)
+        alert(error.response.data.error)
         yield put(loadFailure())
     }
 }

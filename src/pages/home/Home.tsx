@@ -1,4 +1,4 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import style from "./home.module.css"
 import { useDispatch, useSelector } from "react-redux"
 import Header from "../../components/header/header"
@@ -15,43 +15,48 @@ function Home(){
     const [url, setUrl] = useState("")
     const [language, setLanguage] = useState("Postgresql")
     const [load, setLoad] = useState("Connect")
-    const [error, setError] = useState("")
     const [currentTable, setCurrentTable] = useState(0)
-
-    function timeout(delay: number) {
-        return new Promise(res => setTimeout(res, delay))
-    }
+    const [searchValue, setSearchValue] = useState("")
 
     async function connection(){
         if (url !== ""){
             setLoad("Connecting...")
             dispatch({ type: DatabaseTypes.LOAD_REQUEST, payload: { url, language, setLoad }})
-        } else {
-            setError("Empty url")
-            await timeout(2000)
-            setError("")
         }
+    }
+
+    function search(e: string){
+        console.log(e)
+        if (e == "") {
+            dispatch({ type: DatabaseTypes.FILTER, payload: { currentTable, column: "", value: "" }})
+            return
+        }
+        const parts = e.split(": ")
+        if (parts[1] == "") dispatch({ type: DatabaseTypes.FILTER, payload: { currentTable, column: parts[0], value: parts[1] }})
+        if (parts.length > 2 || !parts[0] || !parts[1]) return
+        dispatch({ type: DatabaseTypes.FILTER, payload: { currentTable, column: parts[0], value: parts[1] }})
     }
 
     return(
         <>
-            <Header connection={connection} setUrl={setUrl} load={load} error={error} setLanguage={setLanguage}/>
+            <Header connection={connection} setUrl={setUrl} load={load} setLanguage={setLanguage}/>
             <main id={style.main}>
                 { 
                     State.database.data.length != 0 ?
-                        <div id={style.table}>
-                            <div id={style.select}>
-                                <select onChange={(e: any) => setCurrentTable(e.target.value)}>
+                        <div id={style.localTable}>
+                            <div id={style.selectSearch}>
+                                <select onChange={(e: any) => {setCurrentTable(e.target.value); setSearchValue("")}}>
                                     { State.database.data.map((table, index) => <option value={index}>{table.table}</option>) }
                                 </select>
+                                <input value={searchValue} type="text" placeholder="column: value" onChange={(e) => {search(e.target.value), setSearchValue(e.target.value)}}/>
                             </div>
-                            <div style={{"overflowX": "auto"}}>
+                            <div id={style.table}>
                                 { 
-                                    <Table database={State.database.data[currentTable]}/>
+                                    <Table database={State.database.search[currentTable]}/>
                                 }
                             </div>
                         </div>
-                    : 
+                    :
                         <></>
                 }
             </main>
