@@ -39,7 +39,7 @@ function Table(props: TableProps){
             { props.database.values.map((row: any ) => (
                     <tr>
                         <td><BsTrash size={18} cursor="pointer" onClick={() => props.deleteRow(row)}/></td>
-                        <td><BsArrowRepeat size={18} color="white" cursor="pointer"/></td>
+                        <td>{/* <BsArrowRepeat size={18} color="white" cursor="pointer"/> */}</td>
                         {
                             Object.values(row).map((value: any) => (
                                 <td>{String(value)}</td>

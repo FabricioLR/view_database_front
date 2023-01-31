@@ -1,6 +1,6 @@
 import { call, put } from "@redux-saga/core/effects";
 import api from "../../../components/api";
-import { loadFailure, loadSuccess, loadRequest, saveNewRow, saveNewRowFailure, saveNewRowSuccess, filter, deleteRow, deleteRowFailure } from "./actions";
+import { loadFailure, loadSuccess, loadRequest, saveNewRow, saveNewRowFailure, saveNewRowSuccess, filter, deleteRow, deleteRowFailure, deleteRowSuccess } from "./actions";
 import { Database, row } from "./types"
 
 interface ResponseData {
@@ -49,9 +49,11 @@ export function* SaveNewRow({ payload }: ReturnType<typeof saveNewRow>){
 }
 
 export function* DeleteRow({ payload }: ReturnType<typeof deleteRow>){
-    console.log(payload)
+    const { row, table, currentTable } = payload as any
     try {
-        
+        yield call(api.post, "/deleteRow", { row, table })
+
+        yield put(deleteRowSuccess({ row, currentTable }))
     } catch (error: any) {
         alert(error.response.data.error)
         yield put(deleteRowFailure())

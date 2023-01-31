@@ -84,7 +84,8 @@ const reducer: Reducer<DatabaseState> = (state = INITIAL_STATE, action) => {
         case DatabaseTypes.DELETE_ROW:
             return { ...state, loading: true }
         case DatabaseTypes.DELETE_ROW_SUCCESS:
-            return { ...state }
+            var currentTable = action.payload.data.currentTable
+            return { ...state, data: state.data.map((value, index) => index == currentTable ? { ...state.data[currentTable], values: state.data[currentTable].values.filter(row => JSON.stringify(row) != JSON.stringify(action.payload.data.row))} : value) }
         case DatabaseTypes.DELETE_ROW_FAILURE:
             return { ...state, loading: false, error: true }
         default:
