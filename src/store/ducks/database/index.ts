@@ -4,7 +4,7 @@ import { DatabaseTypes, DatabaseState } from "./types"
 
 const INITIAL_STATE: DatabaseState = {
     data: [
-        {
+        /* {
             table: "users",
             columns: ["id", "name", "email", "password", "image", "isAdmin"],
             values: [
@@ -24,10 +24,10 @@ const INITIAL_STATE: DatabaseState = {
                     id: "1", name: "teste", email: "test@test.com", password: "teste", image: "teste", isAdmin: true
                 },
             ]
-        }
+        } */
     ],
     search: [
-        {
+        /* {
             table: "users",
             columns: ["id", "name", "email", "password", "image", "isAdmin"],
             values: [
@@ -47,7 +47,7 @@ const INITIAL_STATE: DatabaseState = {
                     id: "1", name: "teste", email: "test@test.com", password: "teste", image: "teste", isAdmin: true
                 },
             ]
-        }
+        } */
     ],
     loading: false,
     error: false
