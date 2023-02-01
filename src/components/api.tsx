@@ -4,7 +4,7 @@ import axios from "axios"
 //"https://view-database-back.onrender.com"
 
 const api = axios.create({
-   baseURL: "http://localhost:4000/"
+   baseURL: "https://view-database-back.onrender.com"
 })
 
 export default api

@@ -1,3 +1,5 @@
+import { row } from "../../../components/types/types"
+
 export enum DatabaseTypes{
     "LOAD_REQUEST" = "@DataDB/LOAD_REQUEST",
     "LOAD_SUCCESS" = "@DataDB/LOAD_SUCCESS",
@@ -12,25 +14,29 @@ export enum DatabaseTypes{
     "DELETE_ROW" = "@DataDB/DELETE_ROW",
     "DELETE_ROW_FAILURE" = "@DataDB/DELETE_ROW_FAILURE",
     "DELETE_ROW_SUCCESS" = "@DataDB/DELETE_ROW_SUCCESS",
+
+    "UPDATE_VALUE" = "@DataDB/UPDATE_VALUE",
+    "UPDATE_VALUE_FAILURE" = "@DataDB/UPDATE_VALUE_FAILURE",
+    "UPDATE_VALUE_SUCCESS" = "@DataDB/UPDATE_VALUE_SUCCESS",
 }
 
 export type Payload = {
-    url: string
-    language: string
-    setLoad: Function
-    setNewRow: Function
-    searchValue: string
-    column: string
-    value: string
-    currentTable: number
-    row: row
-    table: string
-    update: row
-}
-
-export type row = {
-    [key: string]: string | number | any[] | object | boolean
-    [key: number]: string | number | any[] | object | boolean
+    payload: {
+        setLoad: Function
+        setNewRow: Function
+        url: string
+        language: string
+        searchValue: string
+        column: string
+        columnIndex: number
+        value: string
+        row: row
+        rowIndex: number
+        tableName: string
+        tableIndex: number
+        update: row
+    }
+    type: string
 }
 
 export type Database = {

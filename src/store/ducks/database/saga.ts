@@ -1,27 +1,19 @@
 import { call, put } from "@redux-saga/core/effects";
 import api from "../../../components/api";
-import { loadFailure, loadSuccess, loadRequest, saveNewRow, saveNewRowFailure, saveNewRowSuccess, filter, deleteRow, deleteRowFailure, deleteRowSuccess } from "./actions";
-import { Database, row } from "./types"
+import { row } from "../../../components/types/types";
+import { loadFailure, loadSuccess, loadRequest, saveNewRow, saveNewRowFailure, saveNewRowSuccess, deleteRow, deleteRowFailure, deleteRowSuccess, updateValue, updateValueFailure, updateValueSuccess } from "./actions";
+import { Database } from "./types";
 
-interface ResponseData {
+type ResponseData = {
     data: {
-        result: {
-            database: Database[]
-        },
-    },
+        result: { database: Database[], type: "1" } | { row: row, type: "2" }
+    }
 }
 
-interface ResponseData2 {
-    data: {
-        result: row
-    },
-}
-
-export function* GetDatabase({ payload }: ReturnType<typeof loadRequest>){
-    const { url, language, setLoad } = payload as any
-
+export function* GetDatabase(payload: Parameters<typeof loadRequest>[0]){
+    const { url, language, setLoad } = payload.payload
     try {
-        const response: ResponseData = yield call(api.post, "/database", {
+        const response: ResponseData & { data: ResponseData["data"] & { result: Extract<ResponseData["data"]["result"], { type: "1" }>}} = yield call(api.post, "/database", {
             url, language
         })
 
@@ -35,12 +27,12 @@ export function* GetDatabase({ payload }: ReturnType<typeof loadRequest>){
     }
 }
 
-export function* SaveNewRow({ payload }: ReturnType<typeof saveNewRow>){
-    const { currentTable, setNewRow, update, table } = payload as any
+export function* SaveNewRow(payload: Parameters<typeof saveNewRow>[0]){
+    const { setNewRow, update, tableIndex, tableName } = payload.payload
     try {
-        const response: ResponseData2 = yield call(api.post, "/saveRow", { update, table })
+        const response: ResponseData & { data: ResponseData["data"] & { result: Extract<ResponseData["data"]["result"], { type: "2" }>}} = yield call(api.post, "/saveRow", { update, table: tableName })
 
-        yield put(saveNewRowSuccess({ row: response.data.result, currentTable }))
+        yield put(saveNewRowSuccess({ row: response.data.result.row, tableIndex }))
         setNewRow({})
     } catch (error: any) {
         alert(error.response.data.error)
@@ -48,14 +40,26 @@ export function* SaveNewRow({ payload }: ReturnType<typeof saveNewRow>){
     }
 }
 
-export function* DeleteRow({ payload }: ReturnType<typeof deleteRow>){
-    const { row, table, currentTable } = payload as any
+export function* DeleteRow(payload: Parameters<typeof deleteRow>[0]){
+    const { row, tableName, tableIndex } = payload.payload
     try {
-        yield call(api.post, "/deleteRow", { row, table })
+        yield call(api.post, "/deleteRow", { row, table: tableName })
 
-        yield put(deleteRowSuccess({ row, currentTable }))
+        yield put(deleteRowSuccess({ row, tableIndex }))
     } catch (error: any) {
         alert(error.response.data.error)
         yield put(deleteRowFailure())
+    }
+}
+
+export function* UpdateValue(payload: Parameters<typeof updateValue>[0]){
+    const { row, tableName, tableIndex, update, rowIndex } = payload.payload
+    try {
+        yield call(api.post, "/updateValue", { row, table: tableName, update })
+
+        yield put(updateValueSuccess({ tableIndex, update, rowIndex }))
+    } catch (error: any) {
+        alert(error.response.data.error)
+        yield put(updateValueFailure())
     }
 }

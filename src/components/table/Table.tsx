@@ -1,17 +1,24 @@
-import { Database, row } from "../../store/ducks/database/types"
 import style from "./table.module.css"
-import { BsTrash, BsArrowRepeat } from "react-icons/bs"
+import { BsTrash } from "react-icons/bs"
 import { FiSave } from "react-icons/fi"
-
-type TableProps = {
-    database: Database
-    setNewRow: Function
-    newRow: row
-    saveNewRow: Function
-    deleteRow: Function
-}
+import { useRef, useState } from "react"
+import useOutsideClick from "../hooks/userOutsideClick"
+import { TableProps, UpdateData } from "../types/types"
 
 function Table(props: TableProps){
+    const [update, setUpdate] = useState<UpdateData>()
+    const ref = useRef(null)
+    useOutsideClick({ref, setFunction: setUpdate})
+
+    function confirm(){
+        props.updateValue(update)
+        props.setPopUp(undefined)
+    }
+
+    function deny(){
+        props.setPopUp(undefined)
+    }
+    
     return(
         <table id={style.table}>
             <tr>
@@ -36,13 +43,26 @@ function Table(props: TableProps){
                     ))
                 }
             </tr>
-            { props.database.values.map((row: any ) => (
+            { props.database.values.map((row: any, index1) => (
                     <tr>
                         <td><BsTrash size={18} cursor="pointer" onClick={() => props.deleteRow(row)}/></td>
                         <td>{/* <BsArrowRepeat size={18} color="white" cursor="pointer"/> */}</td>
                         {
-                            Object.values(row).map((value: any) => (
-                                <td>{String(value)}</td>
+                            Object.keys(row).map((value: any, index2) => (
+                                <td onDoubleClick={() => {
+                                    setUpdate({rowIndex: index1, columnIndex: index2, row, update: { [value]: row[value] }}) 
+                                }}>
+                                    {
+                                        update?.rowIndex == index1 && update?.columnIndex == index2 ? 
+                                            <input id={style.updateInput} onChange={(e) => setUpdate({ ...update, update: { [value]: e.target.value } })} ref={ref} type="text" value={String(update?.update[value])} onKeyUp={(key) => {
+                                                if (key.key == "Enter"){
+                                                    props.setPopUp({ message: "Do you realy want to update this value?", confirm, deny })
+                                                }
+                                            }}/>
+                                        : 
+                                            String(row[value])
+                                    }
+                                </td>
                             ))
                         }
                     </tr>

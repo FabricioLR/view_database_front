@@ -1,12 +1,6 @@
 import { useState } from "react"
+import { HeaderProps } from "../types/types";
 import style from "./header.module.css"
-
-type HeaderProps = {
-    connection: Function
-    setUrl: Function
-    load: string
-    setLanguage: Function
-}
 
 function Header(props: HeaderProps){
     const [language, setLanguage] = useState("Postegresql")

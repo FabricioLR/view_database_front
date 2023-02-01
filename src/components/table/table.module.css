@@ -33,3 +33,9 @@
     font-size: 14px;
     text-align: center;
 }
+#updateInput{
+    height: 20px;
+    outline: none;
+    padding-right: 3px;
+    padding-left: 3px;
+}
