@@ -10,8 +10,8 @@ type ResponseData = {
     }
 }
 
-export function* GetDatabase(payload: Parameters<typeof loadRequest>[0]){
-    const { url, language, setLoad } = payload.payload
+export function* GetDatabase({ payload }: Parameters<typeof loadRequest>[0]){
+    const { url, language, setLoad } = payload
     try {
         const response: ResponseData & { data: ResponseData["data"] & { result: Extract<ResponseData["data"]["result"], { type: "1" }>}} = yield call(api.post, "/database", {
             url, language
@@ -27,8 +27,8 @@ export function* GetDatabase(payload: Parameters<typeof loadRequest>[0]){
     }
 }
 
-export function* SaveNewRow(payload: Parameters<typeof saveNewRow>[0]){
-    const { setNewRow, update, tableIndex, tableName } = payload.payload
+export function* SaveNewRow({ payload }: Parameters<typeof saveNewRow>[0]){
+    const { setNewRow, update, tableIndex, tableName } = payload
     try {
         const response: ResponseData & { data: ResponseData["data"] & { result: Extract<ResponseData["data"]["result"], { type: "2" }>}} = yield call(api.post, "/saveRow", { update, table: tableName })
 
@@ -40,8 +40,8 @@ export function* SaveNewRow(payload: Parameters<typeof saveNewRow>[0]){
     }
 }
 
-export function* DeleteRow(payload: Parameters<typeof deleteRow>[0]){
-    const { row, tableName, tableIndex } = payload.payload
+export function* DeleteRow({ payload }: Parameters<typeof deleteRow>[0]){
+    const { row, tableName, tableIndex } = payload
     try {
         yield call(api.post, "/deleteRow", { row, table: tableName })
 
@@ -52,8 +52,8 @@ export function* DeleteRow(payload: Parameters<typeof deleteRow>[0]){
     }
 }
 
-export function* UpdateValue(payload: Parameters<typeof updateValue>[0]){
-    const { row, tableName, tableIndex, update, rowIndex } = payload.payload
+export function* UpdateValue({ payload }: Parameters<typeof updateValue>[0]){
+    const { row, tableName, tableIndex, update, rowIndex } = payload
     try {
         yield call(api.post, "/updateValue", { row, table: tableName, update })
 
